@@ -86,6 +86,9 @@ pip install flask flask-login qrcode[pil] pillow
 
 3. crear el .env
 desde la raiz del proyecto crean el .env y asignan las variables sus credenciales
+ADMIN_USERNAME=
+ADMIN_PASSWORD=
+SECRET_KEY=
 
 4. correr el sistema
 ```cmd - visual
