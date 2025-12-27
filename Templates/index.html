@@ -1,0 +1,96 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+{% block title %}Control de Asistencia{% endblock %}
+
+{% block content %}
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <a href="{{ url_for('logout_all') }}" 
+       class="text-white text-decoration-none"
+       onclick="return confirm('¿Cerrar TODAS las sesiones activas (incluyendo este dispositivo)?')">
+        <i class="bi bi-box-arrow-right fs-4 opacity-75 hover-opacity-100"></i>
+    </a>
+</div>
+
+<style>
+    .hover-opacity-100:hover {
+        opacity: 1 !important;
+    }
+</style>
+
+<h1 class="text-center mb-5 mt-5">Control de Asistencia</h1>
+
+<!-- Botones principales -->
+<div class="text-center mb-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+        <!-- Agregar Trabajador -->
+        <div class="col">
+            <a href="{{ url_for('agregar') }}"
+                class="btn btn-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 shadow">
+                <i class="bi bi-person-plus fs-1 mb-3"></i>
+                <strong>Agregar Trabajador</strong>
+            </a>
+        </div>
+
+        <!-- Ver Reportes -->
+        <div class="col">
+            <a href="{{ url_for('reportes') }}"
+                class="btn btn-primary btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 shadow">
+                <i class="bi bi-calendar-check fs-1 mb-3"></i>
+                <strong>Ver Reportes</strong>
+            </a>
+        </div>
+
+        <!-- Modo Escáner para Tablet -->
+        <div class="col">
+            <a href="{{ url_for('escaner') }}" target="_blank"
+                class="btn btn-danger btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 shadow">
+                <i class="bi bi-camera-fill fs-1 mb-3"></i>
+                <strong>Modo Escáner</strong>
+                <small class="text-white-50">para Tablet en entrada</small>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de trabajadores -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>CC</th>
+                <th>QR</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in trabajadores %}
+            <tr>
+                <td>{{ t[0] }}</td>
+                <td><strong>{{ t[1] }}</strong></td>
+                <td>{{ t[2] }}</td>
+                <td>{{ t[3] }}</td>
+                <td>
+                    <a href="{{ url_for('generar_qr', trabajador_id=t[0]) }}" target="_blank">
+                        <i class="bi bi-qr-code text-primary fs-3"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('trabajador', trabajador_id=t[0]) }}" class="btn btn-sm btn-info text-white">
+                        Editar
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center py-5 text-muted fs-3">
+                    No hay trabajadores registrados aún.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

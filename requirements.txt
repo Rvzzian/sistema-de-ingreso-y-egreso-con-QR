@@ -1,0 +1,5 @@
+Flask==3.0.3
+Flask-Login==0.6.3
+Werkzeug==3.0.4
+python-dotenv==1.0.1
+qrcode[pil]==7.4.2

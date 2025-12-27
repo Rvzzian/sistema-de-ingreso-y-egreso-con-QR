@@ -1,0 +1,82 @@
+<!-- templates/ver.html -->
+{% extends "base.html" %}
+{% block title %}Editar Trabajador{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0 fw-bold">Editar Trabajador</h2>
+                </div>
+                <div class="card-body p-5">
+
+                    <!-- Mensajes flash (éxito, error, warning) -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div
+                        class="alert alert-{{ 'danger' if category == 'danger' else 'warning' if category == 'warning' else 'success' }} alert-dismissible fade show mb-4">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <!-- QR centrado grande -->
+                    <div class="text-center mb-5">
+                        <img src="{{ url_for('generar_qr', trabajador_id=trabajador[0]) }}" alt="Código QR"
+                            class="img-fluid rounded shadow" style="max-width: 300px; border: 8px solid white;">
+                        <p class="mt-3 text-muted fs-5">Código QR del trabajador</p>
+                    </div>
+
+                    <!-- Formulario de edición -->
+                    <form method="POST">
+                        <input type="hidden" name="accion" value="editar">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold fs-5">Nombre completo</label>
+                            <input type="text" name="nombre" class="form-control form-control-lg"
+                                value="{{ trabajador[1] }}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold fs-5">Cargo</label>
+                            <input type="text" name="cargo" class="form-control form-control-lg"
+                                value="{{ trabajador[2] }}" required>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label fw-bold fs-5">DNI</label>
+                            <input type="text" name="dni" class="form-control form-control-lg"
+                                value="{{ trabajador[3] }}" required>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-grid d-md-flex gap-3 justify-content-center">
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="bi bi-save"></i> Guardar Cambios
+                            </button>
+
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg px-5">
+                                <i class="bi bi-arrow-left"></i> Volver a Lista
+                            </a>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4">
+                        <form method="POST" class="d-inline"
+                            onsubmit="return confirm('¿ELIMINAR permanentemente a {{ trabajador[1] }}?\nEsta acción no se puede deshacer.')">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <button type="submit" class="btn btn-danger btn-lg px-5">
+                                <i class="bi bi-trash"></i> Eliminar Trabajador
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

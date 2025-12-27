@@ -1,0 +1,103 @@
+<!-- templates/reportes.html -->
+{% extends "base.html" %}
+{% block title %}Reportes de Asistencia{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Reportes de Asistencia</h1>
+
+<!-- Filtros -->
+<!-- Filtros mejorados con Día -->
+<form method="GET" class="mb-4 bg-light p-4 rounded shadow-sm">
+    <div class="row g-3 align-items-end">
+        <div class="col-auto">
+            <label class="form-label">Día</label>
+            <select name="dia" class="form-select">
+                <option value="">Todos</option>
+                {% for d in range(1,32) %}
+                <option value="{{ '%02d'|format(d) }}" {% if dia == '%02d'|format(d) %}selected{% endif %}>
+                    {{ d }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <label class="form-label">Mes</label>
+            <select name="mes" class="form-select">
+                <option value="">Todos</option>
+                {% for m in range(1,13) %}
+                <option value="{{ '%02d'|format(m) }}" {% if mes == '%02d'|format(m) %}selected{% endif %}>
+                    {{ m }} - {{ ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][m-1] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <label class="form-label">Año</label>
+            <input type="number" name="año" class="form-control" value="{{ año or '' }}" placeholder="Ej: 2025" min="2020">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-funnel"></i> Filtrar
+            </button>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('reportes') }}" class="btn btn-outline-secondary">Limpiar filtros</a>
+        </div>
+    </div>
+</form>
+
+<!-- Búsqueda -->
+<form method="GET" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="busqueda" class="form-control" placeholder="Buscar por nombre o DNI..." value="{{ busqueda }}">
+        <button class="btn btn-outline-primary" type="submit">
+            <i class="bi bi-search"></i> Buscar
+        </button>
+    </div>
+    <!-- Mantener filtros de fecha al buscar -->
+    {% if mes %}<input type="hidden" name="mes" value="{{ mes }}">{% endif %}
+    {% if año %}<input type="hidden" name="año" value="{{ año }}">{% endif %}
+</form>
+
+<!-- Tabla de resultados -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>DNI</th>
+                <th>Fecha</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if registros %}
+                {% for r in registros %}
+                <tr>
+                    <td>{{ r[0] }}</td>
+                    <td><strong>{{ r[1] }}</strong></td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                    <td>{{ r[4] }}</td>
+                    <td><span class="badge bg-success">{{ r[5] }}</span></td>
+                    <td><span class="badge bg-danger">{{ r[6] if r[6] else '—' }}</span></td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        No hay registros para los filtros seleccionados.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">
+    <i class="bi bi-arrow-left"></i> Volver a Trabajadores
+</a>
+{% endblock %}
